@@ -1,0 +1,1 @@
+<%@ page contentType="text/html;charset=UTF-8" %><html><body><h1>Java 3-Tier Application</h1><a href="login">Login</a><br><a href="register">Register</a></body></html>
