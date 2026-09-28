@@ -1,0 +1,2 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
+<html><body><h2>Login</h2><form method="post" action="login"><label>Username</label><input name="userName" required><br><label>Password</label><input type="password" name="password" required><br><button type="submit">Login</button></form><a href="register">Create account</a><% if(request.getAttribute("errorMessage") != null) { %><p>${errorMessage}</p><% } %></body></html>
