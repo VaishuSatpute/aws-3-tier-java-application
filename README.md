@@ -37,7 +37,3 @@ Core AWS and DevOps concepts covered:
 ## Deployment Status
 
 This is a learning/practice implementation. No AWS deployment is claimed unless explicitly documented with real evidence.
-
-## Source / Attribution
-
-The architecture and learning material were studied from the DevOps-Projects community repository and adapted for practice.
