@@ -1,0 +1,1 @@
+<%@ page contentType="text/html;charset=UTF-8" %><html><body><h2>Welcome ${username}</h2><p>Authenticated application user.</p></body></html>
