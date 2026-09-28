@@ -1,0 +1,2 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
+<html><body><h2>Register</h2><form method="post" action="register"><input name="firstName" placeholder="First name" required><input name="lastName" placeholder="Last name" required><br><input name="email" type="email" placeholder="Email" required><br><input name="userName" placeholder="Username" required><br><input name="password" type="password" placeholder="Password" required><br><button type="submit">Register</button></form><a href="login">Back to login</a></body></html>
