@@ -1,4 +1,4 @@
-Deploy Java Application on AWS 3-Tier Architecture
+**Deploy Java Application on AWS 3-Tier Architecture**
 AWS Architecture
 
 Table of Contents
@@ -54,15 +54,11 @@ Transit Gateway for inter-VPC communication
 Pre-Requisites
 Required Accounts and Tools
 1. AWS Account Setup
-Create an AWS Free Tier Account
 Install AWS CLI v2
 # For Linux
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 unzip awscliv2.zip
 sudo ./aws/install
-
-# For macOS
-brew install awscli
 
 # Configure AWS CLI
 aws configure
@@ -72,18 +68,13 @@ Git: Version control system
 sudo apt-get update
 sudo apt-get install git
 
-# For macOS
-brew install git
-3. CI/CD Integration
-SonarCloud Account
-
 Sign up at SonarCloud
 Generate authentication token
 Configure project settings:
 # Add to pom.xml
 <properties>
-    <sonar.projectKey>your_project_key</sonar.projectKey>
-    <sonar.organization>your_organization</sonar.organization>
+    <sonar.projectKey>project_key</sonar.projectKey>
+    <sonar.organization>organization</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 </properties>
 JFrog Artifactory
