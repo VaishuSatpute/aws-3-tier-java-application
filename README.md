@@ -1,4 +1,6 @@
 **Deploy Java Application on AWS 3-Tier Architecture**
+<img width="1400" height="937" alt="image" src="https://github.com/user-attachments/assets/7cfcd900-7aaf-4928-b489-6510efc8bfc3" />
+
 AWS Architecture
 
 Table of Contents
