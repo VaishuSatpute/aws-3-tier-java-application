@@ -1,100 +1,137 @@
-**Deploy Java Application on AWS 3-Tier Architecture**
-<img width="1400" height="937" alt="image" src="https://github.com/user-attachments/assets/7cfcd900-7aaf-4928-b489-6510efc8bfc3" />
+# Deploy Java Application on AWS 3-Tier Architecture
 
-AWS Architecture
+![AWS Architecture](https://imgur.com/b9iHwVc.png)
 
-Table of Contents
-Project Overview
-Architecture Overview
-Pre-Requisites
-Infrastructure Setup
-VPC and Networking
-Security Configuration
-Database Layer
-Application Setup
-Build Environment
-Application Deployment
-Load Balancing and Auto Scaling
-Monitoring and Maintenance
-Security Best Practices
-Troubleshooting Guide
-Contributing
-3-tier Architecture Diagram
+## Table of Contents
 
-Project Overview
-Introduction
+1. [Project Overview](#project-overview)
+2. [Architecture Overview](#architecture-overview)
+3. [Pre-Requisites](#pre-requisites)
+4. [Infrastructure Setup](#infrastructure-setup)
+   - [VPC and Networking](#vpc-and-networking)
+   - [Security Configuration](#security-configuration)
+   - [Database Layer](#database-layer)
+5. [Application Setup](#application-setup)
+   - [Build Environment](#build-environment)
+   - [Application Deployment](#application-deployment)
+   - [Load Balancing and Auto Scaling](#load-balancing-and-auto-scaling)
+6. [Monitoring and Maintenance](#monitoring-and-maintenance)
+7. [Security Best Practices](#security-best-practices)
+8. [Troubleshooting Guide](#troubleshooting-guide)
+9. [Contributing](#contributing)
+
+---
+
+![3-tier Architecture Diagram](https://imgur.com/3XF0tlJ.png)
+
+---
+
+# Project Overview
+
+## Introduction
+
 This project demonstrates the deployment of a production-grade Java web application using AWS's robust 3-tier architecture. The implementation follows cloud-native best practices, ensuring high availability, scalability, and security across all application tiers.
 
-Key Features
-High Availability: Multi-AZ deployment with automated failover
-Auto Scaling: Dynamic resource allocation based on demand
-Security: Defense-in-depth approach with multiple security layers
-Monitoring: Comprehensive logging and monitoring setup
-Cost Optimization: Efficient resource utilization and management
-Architecture Overview
-Infrastructure Components
-Presentation Tier (Frontend)
+### Key Features
 
-Nginx web servers in Auto Scaling Group
-Public-facing Network Load Balancer
-CloudFront Distribution for static content
-Application Tier (Backend)
+- **High Availability**: Multi-AZ deployment with automated failover
+- **Auto Scaling**: Dynamic resource allocation based on demand
+- **Security**: Defense-in-depth approach with multiple security layers
+- **Monitoring**: Comprehensive logging and monitoring setup
+- **Cost Optimization**: Efficient resource utilization and management
 
-Apache Tomcat servers in Auto Scaling Group
-Internal Network Load Balancer
-Session management with Amazon ElastiCache
-Data Tier
+## Architecture Overview
 
-Amazon RDS MySQL in Multi-AZ configuration
-Automated backups and point-in-time recovery
-Read replicas for read-heavy workloads
-Network Architecture
-VPC Design
-Two separate VPCs (192.168.0.0/16 and 172.32.0.0/16)
-Public and private subnets across multiple AZs
-Transit Gateway for inter-VPC communication
-Pre-Requisites
-Required Accounts and Tools
-1. AWS Account Setup
-Install AWS CLI v2
-# For Linux
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-unzip awscliv2.zip
-sudo ./aws/install
+### Infrastructure Components
 
-# Configure AWS CLI
-aws configure
-2. Development Tools
-Git: Version control system
-# For Linux
-sudo apt-get update
-sudo apt-get install git
+1. **Presentation Tier (Frontend)**
+   - Nginx web servers in Auto Scaling Group
+   - Public-facing Network Load Balancer
+   - CloudFront Distribution for static content
 
-Sign up at SonarCloud
-Generate authentication token
-Configure project settings:
-# Add to pom.xml
-<properties>
-    <sonar.projectKey>project_key</sonar.projectKey>
-    <sonar.organization>organization</sonar.organization>
-    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-</properties>
-JFrog Artifactory
+2. **Application Tier (Backend)**
+   - Apache Tomcat servers in Auto Scaling Group
+   - Internal Network Load Balancer
+   - Session management with Amazon ElastiCache
 
-Create account on JFrog Cloud
-Set up Maven repository
-Configure authentication:
-<!-- settings.xml -->
-<servers>
-    <server>
-        <id>jfrog-artifactory</id>
-        <username>${env.JFROG_USERNAME}</username>
-        <password>${env.JFROG_PASSWORD}</password>
-    </server>
-</servers>
-Infrastructure Setup
-VPC and Networking
-1. VPC Creation
+3. **Data Tier**
+   - Amazon RDS MySQL in Multi-AZ configuration
+   - Automated backups and point-in-time recovery
+   - Read replicas for read-heavy workloads
+
+### Network Architecture
+
+- **VPC Design**
+  - Two separate VPCs (192.168.0.0/16 and 172.32.0.0/16)
+  - Public and private subnets across multiple AZs
+  - Transit Gateway for inter-VPC communication
+
+# Pre-Requisites
+
+## Required Accounts and Tools
+
+### 1. AWS Account Setup
+- Create an [AWS Free Tier Account](https://aws.amazon.com/free/)
+- Install AWS CLI v2
+  ```bash
+  # For Linux
+  curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+  unzip awscliv2.zip
+  sudo ./aws/install
+
+  # For macOS
+  brew install awscli
+
+  # Configure AWS CLI
+  aws configure
+  ```
+
+### 2. Development Tools
+- **Git**: Version control system
+  ```bash
+  # For Linux
+  sudo apt-get update
+  sudo apt-get install git
+
+  # For macOS
+  brew install git
+  ```
+
+### 3. CI/CD Integration
+- **SonarCloud Account**
+  - Sign up at [SonarCloud](https://sonarcloud.io/)
+  - Generate authentication token
+  - Configure project settings:
+    ```bash
+    # Add to pom.xml
+    <properties>
+        <sonar.projectKey>your_project_key</sonar.projectKey>
+        <sonar.organization>your_organization</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    </properties>
+    ```
+
+- **JFrog Artifactory**
+  - Create account on [JFrog Cloud](https://jfrog.com/start-free/)
+  - Set up Maven repository
+  - Configure authentication:
+    ```xml
+    <!-- settings.xml -->
+    <servers>
+        <server>
+            <id>jfrog-artifactory</id>
+            <username>${env.JFROG_USERNAME}</username>
+            <password>${env.JFROG_PASSWORD}</password>
+        </server>
+    </servers>
+    ```
+
+# Infrastructure Setup
+
+## VPC and Networking
+
+### 1. VPC Creation
+```bash
 # Create primary VPC
 aws ec2 create-vpc \
     --cidr-block 192.168.0.0/16 \
@@ -106,7 +143,10 @@ aws ec2 create-vpc \
     --cidr-block 172.32.0.0/16 \
     --tag-specifications 'ResourceType=vpc,Tags=[{Key=Name,Value=SecondaryVPC}]' \
     --region us-east-1
-2. Subnet Configuration
+```
+
+### 2. Subnet Configuration
+```bash
 # Create public subnet
 aws ec2 create-subnet \
     --vpc-id vpc-xxx \
@@ -120,7 +160,10 @@ aws ec2 create-subnet \
     --cidr-block 192.168.2.0/24 \
     --availability-zone us-east-1b \
     --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=PrivateSubnet1}]'
-3. Gateway Setup
+```
+
+### 3. Gateway Setup
+```bash
 # Create and attach Internet Gateway
 aws ec2 create-internet-gateway
 aws ec2 attach-internet-gateway --vpc-id vpc-xxx --internet-gateway-id igw-xxx
@@ -130,8 +173,12 @@ aws ec2 create-nat-gateway \
     --subnet-id subnet-xxx \
     --allocation-id eipalloc-xxx \
     --tag-specifications 'ResourceType=natgateway,Tags=[{Key=Name,Value=PrimaryNATGateway}]'
-Security Configuration
-1. Security Groups
+```
+
+## Security Configuration
+
+### 1. Security Groups
+```bash
 # Create frontend security group
 aws ec2 create-security-group \
     --group-name FrontendSG \
@@ -150,7 +197,10 @@ aws ec2 authorize-security-group-ingress \
     --protocol tcp \
     --port 443 \
     --cidr 0.0.0.0/0
-2. IAM Roles and Policies
+```
+
+### 2. IAM Roles and Policies
+```json
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -164,8 +214,12 @@ aws ec2 authorize-security-group-ingress \
         }
     ]
 }
-Database Layer
-1. RDS Instance Creation
+```
+
+## Database Layer
+
+### 1. RDS Instance Creation
+```bash
 aws rds create-db-instance \
     --db-instance-identifier prod-mysql \
     --db-instance-class db.t3.medium \
@@ -176,7 +230,10 @@ aws rds create-db-instance \
     --multi-az \
     --vpc-security-group-ids sg-xxx \
     --db-subnet-group-name your-db-subnet-group
-2. Database Initialization
+```
+
+### 2. Database Initialization
+```sql
 -- Connect to database
 mysql -h your-rds-endpoint -u admin -p
 
@@ -196,9 +253,14 @@ CREATE TABLE users (
 -- Create necessary indexes
 CREATE INDEX idx_username ON users(username);
 CREATE INDEX idx_email ON users(email);
-Application Setup
-Build Environment
-1. Maven Configuration
+```
+
+# Application Setup
+
+## Build Environment
+
+### 1. Maven Configuration
+```xml
 <!-- pom.xml -->
 <project>
     <properties>
@@ -219,7 +281,10 @@ Build Environment
         </plugins>
     </build>
 </project>
-2. Build Process
+```
+
+### 2. Build Process
+```bash
 # Clean and build project
 mvn clean package -DskipTests
 
@@ -228,8 +293,12 @@ mvn test
 
 # Deploy to JFrog
 mvn deploy
-Application Deployment
-1. Tomcat Configuration
+```
+
+## Application Deployment
+
+### 1. Tomcat Configuration
+```bash
 # Create tomcat.service
 sudo tee /etc/systemd/system/tomcat.service << EOF
 [Unit]
@@ -257,7 +326,10 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
-2. Nginx Configuration
+```
+
+### 2. Nginx Configuration
+```nginx
 # /etc/nginx/conf.d/app.conf
 upstream backend {
     server internal-nlb-xxx.elb.amazonaws.com:8080;
@@ -277,8 +349,12 @@ server {
         proxy_pass https://your-cloudfront-distribution.cloudfront.net;
     }
 }
-Load Balancing and Auto Scaling
-1. Launch Template Configuration
+```
+
+## Load Balancing and Auto Scaling
+
+### 1. Launch Template Configuration
+```bash
 aws ec2 create-launch-template \
     --launch-template-name WebServerTemplate \
     --version-description WebServerVersion1 \
@@ -288,7 +364,10 @@ aws ec2 create-launch-template \
         "SecurityGroupIds": ["sg-xxx"],
         "UserData": "IyEvYmluL2Jhc2gKCiMgSW5zdGFsbCBOZ2lueApzdWRvIHl1bSBpbnN0YWxsIG5naW54IC15Cg=="
     }'
-2. Auto Scaling Group
+```
+
+### 2. Auto Scaling Group
+```bash
 aws autoscaling create-auto-scaling-group \
     --auto-scaling-group-name WebServerASG \
     --launch-template LaunchTemplateName=WebServerTemplate,Version='$Latest' \
@@ -299,9 +378,14 @@ aws autoscaling create-auto-scaling-group \
     --target-group-arns "arn:aws:elasticloadbalancing:region:account-id:targetgroup/your-target-group/xxx" \
     --health-check-type ELB \
     --health-check-grace-period 300
-Monitoring and Maintenance
-CloudWatch Setup
-1. Metrics Configuration
+```
+
+# Monitoring and Maintenance
+
+## CloudWatch Setup
+
+### 1. Metrics Configuration
+```bash
 # Create custom metric for memory usage
 cat << EOF > /opt/aws/scripts/memory-metrics.sh
 #!/bin/bash
@@ -315,7 +399,10 @@ EOF
 
 # Add to crontab
 echo "* * * * * /opt/aws/scripts/memory-metrics.sh" | crontab -
-2. Log Management
+```
+
+### 2. Log Management
+```bash
 # Configure CloudWatch agent
 cat << EOF > /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
 {
@@ -353,25 +440,34 @@ cat << EOF > /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
     }
 }
 EOF
-Security Best Practices
-1. Network Security
-Implement network ACLs
-Use security groups effectively
-Enable VPC Flow Logs
-Configure AWS WAF
-2. Application Security
-Regular security patches
-Implement AWS Shield
-Use AWS Secrets Manager
-Enable AWS GuardDuty
-3. Data Security
-Enable encryption at rest
-Use SSL/TLS for data in transit
-Regular security audits
-Implement backup strategies
-Troubleshooting Guide
-Common Issues and Solutions
-1. Connection Issues
+```
+
+# Security Best Practices
+
+## 1. Network Security
+- Implement network ACLs
+- Use security groups effectively
+- Enable VPC Flow Logs
+- Configure AWS WAF
+
+## 2. Application Security
+- Regular security patches
+- Implement AWS Shield
+- Use AWS Secrets Manager
+- Enable AWS GuardDuty
+
+## 3. Data Security
+- Enable encryption at rest
+- Use SSL/TLS for data in transit
+- Regular security audits
+- Implement backup strategies
+
+# Troubleshooting Guide
+
+## Common Issues and Solutions
+
+### 1. Connection Issues
+```bash
 # Check connectivity
 telnet database-endpoint 3306
 
@@ -380,7 +476,10 @@ aws ec2 describe-security-groups --group-ids sg-xxx
 
 # Test load balancer health
 aws elbv2 describe-target-health --target-group-arn arn:aws:elasticloadbalancing:region:account-id:targetgroup/your-target-group/xxx
-2. Performance Issues
+```
+
+### 2. Performance Issues
+```bash
 # Check CPU usage
 top -bn1
 
@@ -392,14 +491,12 @@ df -h
 
 # Monitor Tomcat threads
 ps -eLf | grep java | wc -l
-Contributing
-How to Contribute
-Fork the repository
-Create a feature branch
-Commit your changes
-Push to the branch
-Create a Pull Request
-Development Setup
+```
+
+
+## Development Setup
+
+```bash
 # Clone repository
 git clone https://github.com/yourusername/your-repo.git
 
@@ -408,3 +505,5 @@ mvn install
 
 # Run tests
 mvn test
+```
+
